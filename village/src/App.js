@@ -20,6 +20,7 @@ class App extends Component {
     this.fetchSmurf();
   }
   fetchSmurf = () => {
+    this.startedLoading();
     axios.get('http://localhost:3333/smurfs')
     .then(res => this.setSmurf(res.data))
     .catch(error => this.setError(error))
@@ -41,14 +42,28 @@ class App extends Component {
     this.setState({ loading: true});
   }
 
+  addSmurf = smurf => {
+    this.startedLoading();
+    axios.post('http://localhost:3333/smurfs', smurf)
+    .then(res => console.log(res))
+    .catch(error => console.log(error))
+    .finally(this.stoppedLoading);
+  }
+
   // add any needed code to ensure that the smurfs collection exists on state and it has data coming from the server
   // Notice what your map function is looping over and returning inside of Smurfs.
   // You'll need to make sure you have the right properties on state and pass them down to props.
   render() {
     return (
       <div className="App">
+        {
+          this.state.loading && 
+          <p>
+            Loading...
+          </p>
+        }
         <Route path="/" render={() => <NavBar />}></Route>
-        <Route path="/smurf-form" render={() => <SmurfForm />}></Route>
+        <Route path="/smurf-form" render={() => <SmurfForm addSmurf={this.addSmurf} />}></Route>
         <Route exact path="/" render={() => <Smurfs smurfs={this.state.smurfs}/>}></Route>
       </div>
     );

@@ -42,12 +42,15 @@ class App extends Component {
     this.setState({ loading: true});
   }
 
-  addSmurf = smurf => {
+  addSmurf = (smurf, history) => {
     this.startedLoading();
     axios.post('http://localhost:3333/smurfs', smurf)
     .then(res => console.log(res))
     .catch(error => console.log(error))
     .finally(this.stoppedLoading);
+    var homepageUrl = "http://localhost:3000";
+    window.history.replaceState(homepageUrl, 'homepage', '/');
+    window.location.reload(true);
   }
 
   // add any needed code to ensure that the smurfs collection exists on state and it has data coming from the server
